@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
             ORDER BY fechaRegistro DESC
         `;
         res.json(items);
-        
+
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener los items' });
     }
@@ -48,6 +48,33 @@ router.post('/', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Error al crear el destino' });
     }
+});
+
+    // Ruta para actualizar un item
+router.put('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nombre, categoriaId, estado, puntuacion, notas, atributos} = req.body;
+
+        // insertar item en DB
+        const result = await db`
+        UPDATE items
+        SET nombre = COALESCE(${nombre ?? null}, nombre), categoriaId = COALESCE(${categoriaId ?? null}, categoriaId), estado = COALESCE(${estado ?? null}, estado),
+        puntuacion = COALESCE(${puntuacion ?? null}, puntuacion), notas = COALESCE(${notas ?? null}, notas), atributos = COALESCE(${atributos ?? null}, atributos), fechaActividad = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+        RETURNING *
+        `
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Item no encontrado' });
+        }
+        res.status(200).json({
+            item: result[0]
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: 'Error al actualizar el item' });
+    }
+
 });
 
 export default router;
