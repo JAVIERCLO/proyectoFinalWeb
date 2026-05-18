@@ -102,4 +102,31 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+// Ruta para crear registro de actividad
+router.post('/:id/registro', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {valor, notas } = req.body;
+        
+        // Validar campos obligatorios
+        if (!valor) {
+            return res.status(400).json({
+                error: 'faltan campos obligatorios'
+            });
+        }
+        // Insertar el registro en BD
+        const result = await db`
+        INSERT INTO registros (itemId, valor, notas)
+        VALUES (${id}, ${valor}, ${notas ?? null})
+        RETURNING *
+        `
+        res.status(201).json({
+            registro: result[0]
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: 'Error al crear el registro de actividad' });
+    }
+});
+
 export default router;
