@@ -1,14 +1,131 @@
 import express from 'express';
+import db from '../db/db.js';
+import crypto from 'crypto';
 const router = express.Router();
 
+// Ruta para obtener todos los items
 router.get('/', async (req, res) => {
     try {
-        res.json([{
-            id: 1,
-            nombre: 'Francia'
-        }])
+        const items = await db`
+        SELECT * FROM items WHERE activo = true
+            ORDER BY fechaRegistro DESC
+        `;
+        res.json(items);
+
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener los items' });
+    }
+});
+
+// Ruta para crear un nuevo item
+router.post('/', async (req, res) => {
+    try {
+        const { nombre, categoriaId, estado, puntuacion, notas, atributos} = req.body;
+
+        // Validar campos obligatorios
+        if (!nombre || !categoriaId || !estado) {
+            return res.status(400).json({
+                error: 'faltan campos obligatorios'
+            });
+        }
+
+        // campos opcionales
+        const puntuacionFinal = puntuacion ?? null;
+        const notasFinal = notas ?? null;
+        const atributosFinal = atributos ?? null;
+
+        // Insertar item en DB
+        const result = await db`
+        INSERT INTO items (id, nombre, categoriaId, estado, puntuacion, notas, atributos)
+        VALUES (${crypto.randomUUID()}, ${nombre}, ${categoriaId}, ${estado}, ${puntuacionFinal}, ${notasFinal}, ${atributosFinal})
+        RETURNING *
+        `;
+
+        res.status(201).json({
+            item: result[0]
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: 'Error al crear el destino' });
+    }
+});
+
+    // Ruta para actualizar un item
+router.put('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nombre, categoriaId, estado, puntuacion, notas, atributos} = req.body;
+
+        // insertar item en DB
+        const result = await db`
+        UPDATE items
+        SET nombre = COALESCE(${nombre ?? null}, nombre), categoriaId = COALESCE(${categoriaId ?? null}, categoriaId), estado = COALESCE(${estado ?? null}, estado),
+        puntuacion = COALESCE(${puntuacion ?? null}, puntuacion), notas = COALESCE(${notas ?? null}, notas), atributos = COALESCE(${atributos ?? null}, atributos), fechaActividad = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+        RETURNING *
+        `
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Item no encontrado' });
+        }
+        res.status(200).json({
+            item: result[0]
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: 'Error al actualizar el item' });
+    }
+
+});
+
+// Ruta para eliminar un item
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Marcar el item como inactivo en BD
+        const result = await db`
+        UPDATE items
+        SET activo = false, fechaActividad = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+        RETURNING *
+        `
+        // Verificar que se haya encontrado el item
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Item no encontrado' });
+        }
+        res.status(200).json({
+            message: 'Item eliminado exitosamente'
+        });
+
+    } catch (error) {
+            res.status(500).json({ error: 'Error al eliminar el item' });
+    }
+});
+
+// Ruta para crear registro de actividad
+router.post('/:id/registro', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {valor, notas } = req.body;
+        
+        // Validar campos obligatorios
+        if (!valor) {
+            return res.status(400).json({
+                error: 'faltan campos obligatorios'
+            });
+        }
+        // Insertar el registro en BD
+        const result = await db`
+        INSERT INTO registros (itemId, valor, notas)
+        VALUES (${id}, ${valor}, ${notas ?? null})
+        RETURNING *
+        `
+        res.status(201).json({
+            registro: result[0]
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: 'Error al crear el registro de actividad' });
     }
 });
 
