@@ -77,4 +77,29 @@ router.put('/:id', async (req, res) => {
 
 });
 
+// Ruta para eliminar un item
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Marcar el item como inactivo en BD
+        const result = await db`
+        UPDATE items
+        SET activo = false, fechaActividad = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+        RETURNING *
+        `
+        // Verificar que se haya encontrado el item
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Item no encontrado' });
+        }
+        res.status(200).json({
+            message: 'Item eliminado exitosamente'
+        });
+
+    } catch (error) {
+            res.status(500).json({ error: 'Error al eliminar el item' });
+    }
+});
+
 export default router;
