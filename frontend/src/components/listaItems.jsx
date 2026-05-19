@@ -1,13 +1,18 @@
-function ItemList({ items }) {
+import ItemCard from "./itemCard";
+
+function ItemList({ items, onArchivarItem }) {
     return (
-        <div className = "item-list">
+        <div className="item-list">
             <ul>
-                {items.map(item => {
-                    <li key = {item.id}>
-                        {item.nombre} - {item.categoriaId} - {item.estado} - {item.puntuacion} - {item.notas}
-                    </li>
-                })}
+                {items
+                    .filter(item => item.activo).map(item => (
+                        <li key={item.id}>
+                            <ItemCard{...item}onArchivarItem={onArchivarItem}/>
+                        </li>
+                    ))}
             </ul>
         </div>
     );
 }
+
+export default ItemList;

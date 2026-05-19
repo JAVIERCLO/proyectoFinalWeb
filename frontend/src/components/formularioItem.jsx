@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function CrearItem() {
+function CrearItem({ onAgregarItem }) {
     const [nombre, setNombre] = useState('');
     const [categoriaId, setCategoriaId] = useState('');
     const [estado, setEstado] = useState('');
@@ -9,26 +9,48 @@ function CrearItem() {
 
     const ingresarItem = (e) => {
         e.preventDefault();
+
+        // Validar campos obligatorios
+        if (!nombre || !categoriaId || !estado) {
+            alert('Completa los campos obligatorios');
+            return;
+        }
+
         const nuevoItem = {
+            id: crypto.randomUUID(),
             nombre,
             categoriaId,
             estado,
-            puntuacion,
-            notas
+            puntuacion: puntuacion ? Number(puntuacion) : null,
+            fechaRegistro: new Date().toISOString(),
+            fechaActividad: new Date().toISOString(),
+            atributos: {},
+            notas,
+            activo: true
         };
-        // Aquí puedes agregar la lógica para enviar el nuevo item a tu backend o actualizar el estado de tu aplicación
-};
+
+        onAgregarItem(nuevoItem);
+
+        // Limpiar formulario
+        setNombre('');
+        setCategoriaId('');
+        setEstado('');
+        setPuntuacion('');
+        setNotas('');
+    };
 
     return (
-        <form onSubmit = {ingresarItem}>
-            <input value = {nombre} onChange = {e => setNombre(e.target.value)} placeholder = "Nombre"> </input>
-            <input value = {categoriaId} onChange = {e => setCategoriaId(e.target.value)} placeholder = "ID de Categoría"> </input>
-            <input value = {estado} onChange = {e => setEstado(e.target.value)} placeholder = "Estado"> </input>
-            <input value = {puntuacion} onChange = {e => setPuntuacion(e.target.value)} placeholder = "Puntuación"> </input>
-            <input value = {notas} onChange = {e => setNotas(e.target.value)} placeholder = "Notas"> </input>
-            <button type = "submit">Ingresar Item</button>
+        <form onSubmit={ingresarItem}>
+            <input value={nombre}onChange={e => setNombre(e.target.value)}placeholder="Nombre"/>
+            <input value={categoriaId}onChange={e => setCategoriaId(e.target.value)}placeholder="ID de Categoría"/>
+            <input value={estado}onChange={e => setEstado(e.target.value)}placeholder="Estado"/>
+            <input type="number"value={puntuacion}onChange={e => setPuntuacion(e.target.value)}placeholder="Puntuación"/>
+            <input value={notas}onChange={e => setNotas(e.target.value)}placeholder="Notas"/>
+            <button type="submit">
+                Ingresar Item
+            </button>
         </form>
-    ) 
+    );
 }
 
 export default CrearItem;
