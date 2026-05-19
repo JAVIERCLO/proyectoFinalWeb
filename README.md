@@ -28,4 +28,4 @@ docker-compose up --build (backend separado del frontend)
 {{Javier Chávez}}
 
 Evidencia de personalización
-![[items.png]]
+![Mis primeros items](assets/items.png)

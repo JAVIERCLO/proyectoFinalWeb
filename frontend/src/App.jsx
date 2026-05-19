@@ -14,9 +14,7 @@ const agregarItem = (nuevoItem) => {
 const archivarItem = (id) => {
     setItems(
         items.map(item =>
-            item.id === id
-                ? { ...item, activo: false }
-                : item
+            item.id === id ? { ...item, activo: false }: item
         )
     );
 };
