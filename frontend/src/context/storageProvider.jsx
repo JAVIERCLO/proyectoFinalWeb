@@ -1,3 +1,6 @@
+import { createContext, useState, useEffect, useCallback } from 'react';
+const StorageContext = createContext();
+
 export function StorageProvider({ children }) {
     const [modo, setModoState] = useState(() =>
         localStorage.getItem('modo') || 'local'
@@ -63,34 +66,46 @@ export function StorageProvider({ children }) {
         }
     }, [modo, items]);
 
-    const guardarItem = (nuevoItem) => {
-        setItems([...items, nuevoItem]);
-    };
-
-    const archivarItem = (id) => {
-        setItems(
-            items.map(item =>
-                item.id === id
-                    ? { ...item, activo: false }
-                    : item
-            )
-        );
-    };
+    const archivarItem = useCallback(async (id) => {
+        setCargando(true); setError(null);
+        try {
+            // modo API
+            if (modo === 'api') {
+                const res = await fetch(`${API_URL}/api/items/${id}`, {
+                    method: 'DELETE',
+                });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                const itemEliminado = data.item;
+                const nuevosItems = items.map(item => (item.id === id ? itemEliminado : item));
+                setItems(nuevosItems);
+                return itemEliminado;
+            } else {
+                // local Storage
+                const nuevosItems = items.map(item => item.id === id ? {...item, activo: false}: item);
+                setItems(nuevosItems);
+                localStorage.setItem('items', JSON.stringify(nuevosItems));
+                return id;
+            }
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setCargando(false);
+        }
+    }, [modo, items]);
 
     useEffect(() => {
         localStorage.setItem('items', JSON.stringify(items));
     }, [items]);
 
-
-
-
-
     return (
         <StorageContext.Provider value={{
         modo, setModo, cargando, error,
-        obtenerItems, guardarItem, archivarItem,
+        obtenerItems, guardarItem, archivarItem, items
         }}>
         {children}
         </StorageContext.Provider>
     );
 }
+
+export default StorageContext;

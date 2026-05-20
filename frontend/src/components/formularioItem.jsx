@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import StorageContext from '../context/storageProvider';
 
-function CrearItem({ onAgregarItem }) {
+function CrearItem() {
+    const { guardarItem } = useContext(StorageContext);
     const [nombre, setNombre] = useState('');
     const [categoriaId, setCategoriaId] = useState('');
     const [estado, setEstado] = useState('');
@@ -29,7 +31,7 @@ function CrearItem({ onAgregarItem }) {
             activo: true
         };
 
-        onAgregarItem(nuevoItem);
+        guardarItem(nuevoItem);
 
         // Limpiar formulario
         setNombre('');
