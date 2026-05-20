@@ -1,3 +1,7 @@
+import { useContext } from 'react';
+import StorageContext from '../context/storageProvider';
+
+
 function ItemCard({
     id,
     nombre,
@@ -5,8 +9,8 @@ function ItemCard({
     estado,
     puntuacion,
     notas,
-    onArchivarItem
 }) {
+    const { archivarItem } = useContext(StorageContext);
     return (
         <div className="item-card">
             <h3>{nombre}</h3>
@@ -16,7 +20,7 @@ function ItemCard({
             <p>Puntuación: {puntuacion ?? 'Sin puntuación'}</p>
             <p>Notas: {notas || 'Sin notas'}</p>
 
-            <button onClick={() => onArchivarItem(id)}>
+            <button onClick={() => archivarItem(id)}>
                 Archivar
             </button>
         </div>
