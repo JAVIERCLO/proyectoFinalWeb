@@ -3,6 +3,7 @@ import StorageContext from '../context/storageProvider';
 
 function CrearItem() {
     const inputRef = useRef();
+    const intervalRef = useRef();
     const { guardarItem } = useContext(StorageContext);
     const [nombre, setNombre] = useState('');
     const [categoriaId, setCategoriaId] = useState('');
@@ -49,6 +50,7 @@ function CrearItem() {
 
         guardarItem(nuevoItem);
         inputRef.current.focus();
+        
 
         // Limpiar formulario
         setNombre('');
