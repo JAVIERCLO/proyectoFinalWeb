@@ -1,13 +1,30 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef, useEffect } from 'react';
 import StorageContext from '../context/storageProvider';
 
 function CrearItem() {
+    const inputRef = useRef();
+    const intervalRef = useRef();
     const { guardarItem } = useContext(StorageContext);
     const [nombre, setNombre] = useState('');
     const [categoriaId, setCategoriaId] = useState('');
     const [estado, setEstado] = useState('');
     const [puntuacion, setPuntuacion] = useState('');
     const [notas, setNotas] = useState('');
+
+        // Atajo del teclado
+    useEffect(() => {
+        const manejarAtajo = (e) => {
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                inputRef.current.focus();
+            }
+        };
+        window.addEventListener('keydown', manejarAtajo);
+
+        return () => {
+            window.removeEventListener('keydown', manejarAtajo);
+        };
+    }, []);
 
     const ingresarItem = (e) => {
         e.preventDefault();
@@ -32,6 +49,8 @@ function CrearItem() {
         };
 
         guardarItem(nuevoItem);
+        inputRef.current.focus();
+        
 
         // Limpiar formulario
         setNombre('');
@@ -43,7 +62,7 @@ function CrearItem() {
 
     return (
         <form onSubmit={ingresarItem}>
-            <input value={nombre}onChange={e => setNombre(e.target.value)}placeholder="Nombre"/>
+            <input ref = {inputRef} value={nombre}onChange={e => setNombre(e.target.value)}placeholder="Nombre"/>
             <input value={categoriaId}onChange={e => setCategoriaId(e.target.value)}placeholder="ID de Categoría"/>
             <input value={estado}onChange={e => setEstado(e.target.value)}placeholder="Estado"/>
             <input type="number"value={puntuacion}onChange={e => setPuntuacion(e.target.value)}placeholder="Puntuación"/>
