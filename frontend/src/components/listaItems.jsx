@@ -14,7 +14,7 @@ function ItemList() {
         if (ultimoItemRef.current) {
             ultimoItemRef.current.scrollIntoView({ behavior: 'smooth' })
         }
-    }, [itemsActivos]);
+    }, [itemsActivos.length]);
     
     return (
         <div className="item-list">
