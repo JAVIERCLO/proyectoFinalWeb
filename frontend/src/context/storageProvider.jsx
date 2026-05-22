@@ -3,7 +3,7 @@ const StorageContext = createContext();
 
 export function StorageProvider({ children }) {
     const [modo, setModoState] = useState(() =>
-        localStorage.getItem('modo') || 'local'
+        localStorage.getItem('modo') || 'api'
     );
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState(null);
