@@ -1,18 +1,50 @@
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import CrearItem from "./components/formularioItem";
 import ItemList from "./components/listaItems";
+import StorageContext from "./context/storageProvider";
 import ThemeContext from "./context/themeProvider";
 
 function App() {
+    const { modo, setModo } = useContext(StorageContext);
     const { tema, setTema } = useContext(ThemeContext);
-        return (
-            <div>
-                {/* botón de prueba para cambio de tema */}
-                <button onClick = {() => setTema(tema === 'oscuro' ? 'claro' : 'oscuro')}></button>
-                <CrearItem />
-                <ItemList />
+
+    return (
+        <div>
+
+            {/* top bar */}
+            <div id="top-bar">
+
+                <h1 id="main-title">
+                    Travel Tracker
+                </h1>
+
+                {/* navbar */}
+                <div id="navbar">
+
+                    {/* Toggle tema */}
+                    <button className="btn btn-primary" onClick={() => setTema(tema === 'oscuro' ? 'claro' : 'oscuro')}>
+                        Tema: {tema}
+                    </button>
+
+                    {/* Toggle modo */}
+                    <button className="btn btn-secondary" onClick={() => setModo(modo === 'api' ? 'local' : 'api')}>
+                        Modo: {modo}
+                    </button>
+
+                </div>
+
             </div>
-        );
+
+            {/* formulario */}
+            <div id="form-section">
+                <CrearItem />
+            </div>
+
+            {/* itemList */}
+            <ItemList />
+
+        </div>
+    );
 }
 
 export default App;

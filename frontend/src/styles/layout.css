@@ -1,0 +1,314 @@
+/* =========================
+layout
+========================= */
+
+body {
+    background: var(--color-fondo);
+    color: var(--color-texto);
+
+    font-family: sans-serif;
+
+    margin: 0;
+    padding: 2rem;
+
+    transition:
+        background-color 0.2s,
+        color 0.2s;
+}
+
+/* =========================
+top bar
+========================= */
+
+#top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 2rem;
+
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* =========================
+titulo
+========================= */
+
+#main-title {
+    font-size: 2rem;
+    margin: 0;
+
+    border-bottom: 2px solid var(--color-detalles);
+    padding-bottom: 0.5rem;
+}
+
+/* =========================
+navbar
+========================= */
+
+#navbar {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+/* =========================
+container formulario
+========================= */
+
+#form-section {
+    max-width: 600px;
+
+    margin: 0 auto 2rem auto;
+
+    background: var(--color-superficie);
+
+    padding: 1.5rem;
+
+    border-radius: 12px;
+    border: 1px solid var(--color-detalles);
+
+    animation: fadeIn 0.22s ease;
+}
+
+/* =========================
+formulario
+========================= */
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* =========================
+input boxes
+========================= */
+
+input {
+    padding: 0.75rem;
+
+    border-radius: 8px;
+    border: 1px solid var(--color-detalles);
+
+    background: var(--color-superficie);
+    color: var(--color-texto);
+
+    transition:
+        border-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+input:focus {
+    outline: none;
+
+    border-color: var(--color-acento);
+
+    transform: scale(1.01);
+}
+
+/* =========================
+botones
+========================= */
+
+button {
+    background: var(--color-acento);
+    color: white;
+
+    border: none;
+
+    padding: 0.75rem 1rem;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition:
+        opacity 0.2s,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+button:hover {
+    opacity: 0.92;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+/* =========================
+itemList
+========================= */
+
+.item-list {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* =========================
+grid responisive
+========================= */
+
+.card-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(260px, 1fr));
+
+    gap: 1rem;
+}
+
+/* ======================== 
+Tablet 
+========================= */
+@media (min-width: 768px) {
+
+    .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+    }
+}
+
+/* =======================
+Desktop 
+========================= */
+@media (min-width: 1024px) {
+
+    .card-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+/* =========================
+itemCard
+========================= */
+
+.item-card {
+    background: var(--color-superficie);
+    color: var(--color-texto);
+
+    border: 1px solid var(--color-detalles);
+
+    padding: 1rem;
+
+    border-radius: 14px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    transition:
+        box-shadow 0.15s ease,
+        transform 0.15s ease;
+
+    animation: fadeIn 0.22s ease;
+}
+
+.item-card:hover {
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+
+    transform: translateY(-2px);
+}
+
+/* ========================
+titulo itemCard 
+========================= */
+.item-card h3 {
+    margin: 0;
+
+    border-bottom: 1px solid var(--color-detalles);
+
+    padding-bottom: 0.5rem;
+}
+
+/* =========================
+texto itemCard 
+========================= */
+.item-card p {
+    margin: 0;
+
+    line-height: 1.5;
+}
+
+/* =========================
+acciones itemCard
+========================= */
+
+.item-card__acciones {
+    display: flex;
+    gap: 0.5rem;
+
+    margin-top: 0.5rem;
+}
+
+/* =========================
+estado vacio
+========================= */
+
+.estado-vacio {
+    text-align: center;
+
+    color: var(--color-texto);
+
+    opacity: 0.7;
+
+    padding: 3rem 0;
+
+    font-size: 1rem;
+}
+
+/* =========================
+listas
+========================= */
+
+ul {
+    list-style: none;
+
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    margin-bottom: 1rem;
+}
+
+/* =========================
+diseño responsive
+========================= */
+
+@media (max-width: 600px) {
+
+    .item-card__acciones {
+        flex-direction: column;
+    }
+
+    #top-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #navbar {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+/* =========================
+animaciones
+========================= */
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
