@@ -1,3 +1,4 @@
+import React from 'react';
 import { useContext } from 'react';
 import StorageContext from '../context/storageProvider';
 
@@ -27,4 +28,4 @@ function ItemCard({
     );
 }
 
-export default ItemCard;
+export default React.memo(ItemCard);

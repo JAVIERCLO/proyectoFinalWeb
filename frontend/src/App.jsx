@@ -3,11 +3,14 @@ import CrearItem from "./components/formularioItem";
 import ItemList from "./components/listaItems";
 import StorageContext from "./context/storageProvider";
 import ThemeContext from "./context/themeProvider";
+import GraficaPuntuacionCategorias from "./components/graficas/graficaPuntuacion.js";
+import GraficaBarrasEstadosViajes from "./components/graficas/graficaBarras.js";
+import GraficoPieCategorias from "./components/graficas/graficaPIE.js";
 
 function App() {
     const { modo, setModo } = useContext(StorageContext);
     const { tema, setTema } = useContext(ThemeContext);
-    const [estado, dispatch] = useReducer(itemsReducer, estadoInicial);
+    const { items } = useContext(StorageContext);
 
     return (
         <div>
@@ -43,6 +46,17 @@ function App() {
 
             {/* itemList */}
             <ItemList />
+
+            {/* Graficas */}
+            <div id="charts-section">
+
+                <GraficaPuntuacionCategorias items={items} />
+
+                <GraficaBarrasEstadosViajes items={items} />
+
+                <GraficoPieCategorias items={items} />
+
+            </div>
 
         </div>
     );
