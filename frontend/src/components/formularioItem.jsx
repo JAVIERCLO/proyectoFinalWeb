@@ -45,7 +45,8 @@ function CrearItem() {
             fechaActividad: new Date().toISOString(),
             atributos: {},
             notas,
-            activo: true
+            activo: true,
+            registros: []
         };
 
         guardarItem(nuevoItem);

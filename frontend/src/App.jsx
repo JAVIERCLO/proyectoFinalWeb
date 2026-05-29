@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useReducer, useMemo, useCallback, memo } from "react";
 import CrearItem from "./components/formularioItem";
 import ItemList from "./components/listaItems";
 import StorageContext from "./context/storageProvider";
@@ -7,6 +7,7 @@ import ThemeContext from "./context/themeProvider";
 function App() {
     const { modo, setModo } = useContext(StorageContext);
     const { tema, setTema } = useContext(ThemeContext);
+    const [estado, dispatch] = useReducer(itemsReducer, estadoInicial);
 
     return (
         <div>
