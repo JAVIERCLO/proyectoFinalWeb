@@ -1,4 +1,6 @@
-import { createContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useState, useEffect, useCallback, useReducer } from 'react';
+import { itemsReducer, estadoInicial} from '../reducers/itemsReducer.js';
+
 const StorageContext = createContext();
 
 export function StorageProvider({ children }) {
@@ -22,18 +24,20 @@ export function StorageProvider({ children }) {
             const res = await fetch(`${API_URL}/api/items`);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             return await res.json();
+            dispatch({ type: 'HIDRATAR', payload: data });
+            return data;
         } else {
             const data = localStorage.getItem('items');
             return data ? JSON.parse(data) : [];
+            dispatch({ type: 'HIDRATAR', payload: items });
+            return items;
         }
         } catch (err) {
         setError(err.message); return [];
         } finally { setCargando(false); }
     }, [modo]);
 
-    const [items, setItems] = useState(
-        () => JSON.parse(localStorage.getItem('items') || '[]')
-    );
+    const [estado, dispatch] = useReducer(itemsReducer, estadoInicial);
 
     // guardar item en BD con API o en localStorage
     const guardarItem = useCallback(async (item) => {
@@ -50,13 +54,11 @@ export function StorageProvider({ children }) {
                 
                 const data = await res.json();
                 const nuevoItem = data.item;
-                setItems(prev => [...prev, nuevoItem]);
+                dispatch({ type: 'AGREGAR', payload: nuevoItem });
                 return nuevoItem;
             } else {
                 // local Storage
-                const nuevosItems = [...items, item];
-                setItems(nuevosItems);
-                localStorage.setItem('items', JSON.stringify(nuevosItems));
+                dispatch({ type: 'AGREGAR', payload: item });
                 return item;
             }
         } catch (err) {
@@ -64,7 +66,7 @@ export function StorageProvider({ children }) {
         } finally {
             setCargando(false);
         }
-    }, [modo, items]);
+    }, [modo]);
 
     const archivarItem = useCallback(async (id) => {
         setCargando(true); setError(null);
@@ -77,14 +79,11 @@ export function StorageProvider({ children }) {
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
                 const itemEliminado = data.item;
-                const nuevosItems = items.map(item => (item.id === id ? itemEliminado : item));
-                setItems(nuevosItems);
+                dispatch({ type: 'ELIMINAR', payload: id });
                 return itemEliminado;
             } else {
                 // local Storage
-                const nuevosItems = items.map(item => item.id === id ? {...item, activo: false}: item);
-                setItems(nuevosItems);
-                localStorage.setItem('items', JSON.stringify(nuevosItems));
+                dispatch({ type: 'ELIMINAR', payload: id });
                 return id;
             }
         } catch (err) {
@@ -92,16 +91,17 @@ export function StorageProvider({ children }) {
         } finally {
             setCargando(false);
         }
-    }, [modo, items]);
+    }, [modo]);
 
     useEffect(() => {
-        localStorage.setItem('items', JSON.stringify(items));
-    }, [items]);
+        localStorage.setItem('items', JSON.stringify(estado.lista));
+    }, [estado.lista]);
 
     return (
         <StorageContext.Provider value={{
         modo, setModo, cargando, error,
-        obtenerItems, guardarItem, archivarItem, items
+        obtenerItems, guardarItem, archivarItem, items: estado.lista, 
+        dispatch
         }}>
         {children}
         </StorageContext.Provider>
