@@ -101,7 +101,8 @@ export function StorageProvider({ children }) {
         <StorageContext.Provider value={{
         modo, setModo, cargando, error,
         obtenerItems, guardarItem, archivarItem, items: estado.lista, 
-        dispatch
+        dispatch,
+        estado
         }}>
         {children}
         </StorageContext.Provider>
