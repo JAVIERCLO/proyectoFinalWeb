@@ -1,30 +1,30 @@
 export const CATEGORIAS = [
     {
-    id: ciudad,
+    id: 'ciudad',
     nombre: 'Ciudad',
     emoji: '🏙️',
     color: '#00A2FF'
     },
     {
-        id: naturaleza,
+        id: 'naturaleza',
         nombre: 'Naturaleza',
         emoji: '⛰️',
         color: '#4CAF50'
     },
     {
-        id: playa,
+        id: 'playa',
         nombre: 'Playa',
         emoji: '⛱️',
         color: '#DDB347'
     },
     {
-        id: historia,
+        id: 'historia',
         nombre: 'Histórico',
         emoji: '🏛️',
         color: '#D9D9D9'
     },
     {
-        id: comida,
+        id: 'comida',
         nombre: 'Gastronómico',
         emoji: '🍕',
         color: '#D62828'
