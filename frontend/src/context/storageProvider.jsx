@@ -23,12 +23,12 @@ export function StorageProvider({ children }) {
         if (modo === 'api') {
             const res = await fetch(`${API_URL}/api/items`);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return await res.json();
+            const data = await res.json();
             dispatch({ type: 'HIDRATAR', payload: data });
             return data;
         } else {
             const data = localStorage.getItem('items');
-            return data ? JSON.parse(data) : [];
+            const items = data ? JSON.parse(data) : [];
             dispatch({ type: 'HIDRATAR', payload: items });
             return items;
         }
@@ -36,6 +36,10 @@ export function StorageProvider({ children }) {
         setError(err.message); return [];
         } finally { setCargando(false); }
     }, [modo]);
+
+    useEffect(() => {
+        obtenerItems();
+    }, [obtenerItems]);
 
     const [estado, dispatch] = useReducer(itemsReducer, estadoInicial);
 
