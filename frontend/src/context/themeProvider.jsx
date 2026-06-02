@@ -1,28 +1,17 @@
 import { createContext, useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage.js';
-
+import { useAtajoTeclado } from '../hooks/useAtajoTeclado.js';
 const ThemeContext = createContext();
 export function ThemeProvider({ children }) {
     const [tema, setTema] = useLocalStorage('tema', 'oscuro');
 
+        // ataho ctrl + i para cambiar el tema
+    useAtajoTeclado('i', () => {
+        setTema(tema === 'oscuro' ? 'claro' : 'oscuro');
+    }, { ctrl: true });
     useEffect(() => {
 
         document.body.setAttribute('data-theme', tema);
-
-        // ataho ctrl + i para cambiar el tema
-        const manejarAtajo = (e) => {
-            
-            if (e.ctrlKey && e.key === 'i') {
-                e.preventDefault();
-                setTema(tema === 'oscuro' ? 'claro' : 'oscuro');
-            }
-        };
-        window.addEventListener('keydown', manejarAtajo);
-
-        return () => {
-            window.removeEventListener('keydown', manejarAtajo);
-        };
-
     }, [tema]);
 
 
