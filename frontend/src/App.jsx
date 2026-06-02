@@ -6,6 +6,7 @@ import ThemeContext from "./context/themeProvider";
 import GraficaPuntuacionCategorias from "./components/graficas/graficaPuntuacion.jsx";
 import GraficaBarrasEstadosViajes from "./components/graficas/graficaBarras.jsx";
 import GraficoPieCategorias from "./components/graficas/graficaPIE.jsx";
+import { useCategoriaFavorita } from "./hooks/useCategoriaFavorita.js";
 
 function App() {
     const { modo, setModo } = useContext(StorageContext);
@@ -46,6 +47,8 @@ function App() {
         estado.filtroEstado
     ]);
 
+    const categoriaFavorita = useCategoriaFavorita(estado.lista);
+
     const estadisticas = useMemo(() => {
         // Total de items
         const total = estado.lista.length;
@@ -60,7 +63,8 @@ function App() {
             (acc, item) => acc + item.puntuacion, 0 ) / itemsConPuntuacion.length);
 
         return {
-            total, activos, archivados, puntuacionPromedio: Number(puntuacionPromedio.toFixed(1))
+            total, activos, archivados, puntuacionPromedio: Number(puntuacionPromedio.toFixed(1)),
+            categoriaFavorita
         };
     }, [estado.lista]);
 
@@ -106,6 +110,22 @@ function App() {
 
             {/* itemList */}
             <ItemList />
+
+            {/* categoria favorita */}
+            {categoriaFavorita && (
+                <div className="stat-card">
+                    <h3>Categoría favorita</h3>
+                    <p>
+                        {categoriaFavorita.emoji}
+                        {' '}
+                        {categoriaFavorita.nombre}
+                    </p>
+                        {categoriaFavorita.cantidad} destinos
+
+
+                </div>
+
+            )}
 
             {/* Graficas */}
             <div id="charts-section">

@@ -1,10 +1,9 @@
-import { useState, useContext, useRef, useEffect } from 'react';
+import { useState, useContext, useRef } from 'react';
 import StorageContext from '../context/storageProvider';
 import { useAtajoTeclado } from '../hooks/useAtajoTeclado.js';
 
 function CrearItem() {
     const inputRef = useRef();
-    const intervalRef = useRef();
     const { guardarItem } = useContext(StorageContext);
     const [nombre, setNombre] = useState('');
     const [categoriaId, setCategoriaId] = useState('');

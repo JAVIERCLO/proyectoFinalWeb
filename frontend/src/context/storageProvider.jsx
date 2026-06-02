@@ -23,6 +23,13 @@ export function StorageProvider({ children }) {
             dispatch({ type: 'HIDRATAR', payload: data});
         }
     }, [data]);
+    useEffect(() => {
+        if (modo === 'local') {
+            const data = localStorage.getItem('items');
+            const items = data ? JSON.parse(data) : [];
+            dispatch({ type: 'HIDRATAR', payload: items});
+        }
+    }, [modo]);
 
 
 
