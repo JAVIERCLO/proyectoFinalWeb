@@ -1,5 +1,6 @@
 import { useState, useContext, useRef, useEffect } from 'react';
 import StorageContext from '../context/storageProvider';
+import { useAtajoTeclado } from '../hooks/useAtajoTeclado.js';
 
 function CrearItem() {
     const inputRef = useRef();
@@ -12,19 +13,9 @@ function CrearItem() {
     const [notas, setNotas] = useState('');
 
         // Atajo del teclado
-    useEffect(() => {
-        const manejarAtajo = (e) => {
-            if (e.ctrlKey && e.key === 'n') {
-                e.preventDefault();
-                inputRef.current.focus();
-            }
-        };
-        window.addEventListener('keydown', manejarAtajo);
-
-        return () => {
-            window.removeEventListener('keydown', manejarAtajo);
-        };
-    }, []);
+    useAtajoTeclado('n', () => {
+        inputRef.current.focus();
+    }, { ctrl: true });
 
     const ingresarItem = (e) => {
         e.preventDefault();

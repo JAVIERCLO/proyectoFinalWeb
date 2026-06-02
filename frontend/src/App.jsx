@@ -10,7 +10,7 @@ import GraficoPieCategorias from "./components/graficas/graficaPIE.jsx";
 function App() {
     const { modo, setModo } = useContext(StorageContext);
     const { tema, setTema } = useContext(ThemeContext);
-    const { estado } = useContext(StorageContext);
+    const { estado, cargandoFetch, errorFetch } = useContext(StorageContext);
 
     const itemsFiltrados = useMemo(() => {
     let res = estado.lista.filter(item => item.activo);

@@ -1,47 +1,32 @@
 import { createContext, useState, useEffect, useCallback, useReducer } from 'react';
 import { itemsReducer, estadoInicial} from '../reducers/itemsReducer.js';
+import { useFetch } from '../hooks/useFetch.js';
+import { useLocalStorage } from '../hooks/useLocalStorage.js';
 
 const StorageContext = createContext();
 
 export function StorageProvider({ children }) {
-    const [modo, setModoState] = useState(() =>
-        localStorage.getItem('modo') || 'api'
-    );
+    const [estado, dispatch] = useReducer(itemsReducer, estadoInicial);
+    const [modo, setModoState] = useLocalStorage('modo', 'api');
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState(null);
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
     const setModo = (nuevoModo) => {
         setModoState(nuevoModo);
-        localStorage.setItem('modo', nuevoModo);
     };
 
     // obtener items desde API o localStorage
-    const obtenerItems = useCallback(async () => {
-        setCargando(true); setError(null);
-        try {
-        if (modo === 'api') {
-            const res = await fetch(`${API_URL}/api/items`);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            dispatch({ type: 'HIDRATAR', payload: data });
-            return data;
-        } else {
-            const data = localStorage.getItem('items');
-            const items = data ? JSON.parse(data) : [];
-            dispatch({ type: 'HIDRATAR', payload: items });
-            return items;
-        }
-        } catch (err) {
-        setError(err.message); return [];
-        } finally { setCargando(false); }
-    }, [modo]);
-
+    const {data, cargandoFetch, errorFetch} = useFetch(modo === 'api' ? `${API_URL}/api/items` : null);
     useEffect(() => {
-        obtenerItems();
-    }, [obtenerItems]);
+        if (data) {
+            dispatch({ type: 'HIDRATAR', payload: data});
+        }
+    }, [data]);
 
-    const [estado, dispatch] = useReducer(itemsReducer, estadoInicial);
+
+
+
 
     // guardar item en BD con API o en localStorage
     const guardarItem = useCallback(async (item) => {
@@ -104,9 +89,10 @@ export function StorageProvider({ children }) {
     return (
         <StorageContext.Provider value={{
         modo, setModo, cargando, error,
-        obtenerItems, guardarItem, archivarItem, items: estado.lista, 
+        guardarItem, archivarItem, items: estado.lista, 
         dispatch,
-        estado
+        estado,
+        cargandoFetch, errorFetch
         }}>
         {children}
         </StorageContext.Provider>
