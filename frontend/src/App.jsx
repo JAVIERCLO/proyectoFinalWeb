@@ -109,16 +109,9 @@ function App() {
 
             {/* Graficas */}
             <div id="charts-section">
-
-                
-                
                 <GraficoPieCategorias items={itemsFiltrados} />
                 <GraficaBarrasEstadosViajes items={itemsFiltrados} />
                 <GraficaPuntuacionCategorias items={itemsFiltrados} />
-
-
-
-
             </div>
 
         </div>

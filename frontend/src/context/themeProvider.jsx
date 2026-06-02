@@ -1,14 +1,9 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useEffect } from 'react';
+import { useLocalStorage } from '../hooks/useLocalStorage.js';
 
 const ThemeContext = createContext();
 export function ThemeProvider({ children }) {
-    const [tema, setTemaState] = useState (() => {
-        return localStorage.getItem('tema') || 'oscuro'
-    });
-    const setTema = (nuevoTema) => {
-    setTemaState(nuevoTema);
-    localStorage.setItem('tema', nuevoTema);
-    };
+    const [tema, setTema] = useLocalStorage('tema', 'oscuro');
 
     useEffect(() => {
 
@@ -26,7 +21,6 @@ export function ThemeProvider({ children }) {
 
         return () => {
             window.removeEventListener('keydown', manejarAtajo);
-            console.log(tema);
         };
 
     }, [tema]);
