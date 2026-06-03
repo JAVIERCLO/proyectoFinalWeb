@@ -92,3 +92,6 @@ Gráfica más compleja,  qué datos transforma y cómo: La gráfica de puntuaci�
 | useAtajoTeclado | src/hooks/useAtajoTeclado.js | Permite registrar atajos de teclado reutilizables con limpieza automática de listeners. Se utiliza para los atajos Ctrl + I (cambio de tema) y Ctrl + N (enfoque del formulario). |
 | useCategoriaFavorita | src/hooks/useCategoriaFavorita.js | Hook de dominio específico para Travel Tracker. Analiza los Items registrados y determina automáticamente la categoría de viaje más frecuente del usuario. |
 
+
+
+Link a video: https://youtu.be/2QSITTG-sA8
