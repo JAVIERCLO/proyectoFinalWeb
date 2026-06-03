@@ -1,0 +1,9 @@
+# puertos
+BACKEND_PORT=3000
+FRONTEND_PORT=5173
+POSTGRES_PORT=5432
+
+# Credenciales de la base de datos
+DB_USER=postgres_web
+DB_PASSWORD=password
+DB_NAME=proyecto_final_web

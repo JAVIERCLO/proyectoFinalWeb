@@ -26,13 +26,13 @@ crypto
 
 ### Deploy
 
-Vercel
+Render (Backend): https://proyectofinalweb-c7cl.onrender.com/api/items/
 
-Render
+Render (frontend): https://proyectofinalweb-1-7vne.onrender.com/
 
 ▶️ Instrucciones para ejecutar el proyecto
 1. Clonar repositorio
-git clone http://github.com/JAVIERCLO/proyectoFinalWeb/tree/fase3
+git clone http://github.com/JAVIERCLO/proyectoFinalWeb/tree/fase4
 2. Entrar al proyecto
 cd proyectoFinalWeb
 3. Instalar dependencias
